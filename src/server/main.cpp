@@ -4,12 +4,12 @@
 #include <thread>
 
 #include <asio.hpp>
-///#include <clipp.h>
+#include <CLI11.hpp>
 ///#include <spdlog/spdlog.h>
 
 using namespace std;
 using namespace asio::ip;
-///using namespace clipp;
+using namespace CLI;
 
 
 void start_server() { //starts the server and creates the dictionary
@@ -38,7 +38,16 @@ void start_server() { //starts the server and creates the dictionary
     }
 }
 
-int main() {
+int main(int argc, char* argv[])     {
+    string filename{"de-en.txt"};
+    
+    App CLI{"German-English Dictionary"};
+    
+    CLI.add_option("-f", filename, "file for the dictionary");
+
+    CLI11_PARSE(CLI, argc, argv);
+
+    cout << filename << endl;
 
     start_server();
 

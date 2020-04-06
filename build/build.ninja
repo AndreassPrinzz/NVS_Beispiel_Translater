@@ -38,14 +38,14 @@ build PHONY: phony
 
 build meson-out/server@exe/src_server_main.cpp.o: cpp_COMPILER ../src/server/main.cpp
  DEPFILE = meson-out/server@exe/src_server_main.cpp.o.d
- ARGS = -Imeson-out/server@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread
+ ARGS = -Imeson-out/server@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread
 
 build meson-out/server: cpp_LINKER meson-out/server@exe/src_server_main.cpp.o
  LINK_ARGS = -Wl,--as-needed -Wl,--no-undefined -pthread '-Wl,-rpath,$$ORIGIN/' -Wl,-rpath-link,/home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build/meson-out
 
 build meson-out/client@exe/src_client_main.cpp.o: cpp_COMPILER ../src/client/main.cpp
  DEPFILE = meson-out/client@exe/src_client_main.cpp.o.d
- ARGS = -Imeson-out/client@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread
+ ARGS = -Imeson-out/client@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread
 
 build meson-out/client: cpp_LINKER meson-out/client@exe/src_client_main.cpp.o
  LINK_ARGS = -Wl,--as-needed -Wl,--no-undefined -pthread '-Wl,-rpath,$$ORIGIN/' -Wl,-rpath-link,/home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build/meson-out
@@ -85,7 +85,7 @@ build dist: phony meson-dist
 # Suffix
 
 build meson-scan-build: CUSTOM_COMMAND PHONY
- COMMAND = /usr/bin/meson --internal scanbuild /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build /usr/bin/meson -DCLI11_include_dir= -Dasio_include_dir= -Dasio_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -Dclip_include_dir=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Dclipp_include_dir=/home/andi/Documents/Schule/NVS/clipp/include/ -Dclipp_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Ddoctest_include_dir= -Djson_include_dir= -Dspdlog_include_dir= -Dspdlog_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/
+ COMMAND = /usr/bin/meson --internal scanbuild /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build /usr/bin/meson -DCLI11_include_dir= -Dasio_include_dir= -Dasio_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -Dcli11_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -Dclip_include_dir=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Dclipp_include_dir=/home/andi/Documents/Schule/NVS/clipp/include/ -Dclipp_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Ddoctest_include_dir= -Djson_include_dir= -Dspdlog_include_dir= -Dspdlog_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/
  pool = console
 
 build scan-build: phony meson-scan-build

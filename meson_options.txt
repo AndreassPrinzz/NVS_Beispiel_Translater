@@ -1,3 +1,3 @@
 option('asio_include_dir_', type : 'string', value : '/home/andi/Documents/Schule/5BHIF/NVS/asio/include/', description : 'the include dir of asio')
 option('spdlog_include_dir_', type : 'string', value : '/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/', description : 'the include dir of spdlog')
-option('clipp_include_dir_', type : 'string', value : '/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/', description : 'the include dir of clipp')
+option('cli11_include_dir_', type : 'string', value : '/home/andi/Documents/Schule/5BHIF/NVS/CLI11/', description : 'the include dir of cli11')

@@ -1,5 +1,5 @@
 #include <asio.hpp>
-//#include <clipp.h>
+#include <CLI11.hpp>
 #include <fstream>
 #include <string>
 //#include <spdlog/spdlog.h>
@@ -9,7 +9,7 @@
 
 
 using namespace asio::ip;
-//using namespace clipp;
+using namespace CLI;
 
 using namespace std;
 
@@ -37,8 +37,15 @@ void connect_to_server(){ //Starts the connection to the server
 }
 
 
-int main() 
+int main(int argc, char* argv[]) 
 {
+    string word;
+    
+    App CLI{"Requester for the dictionary"};
+    CLI.add_option("-w", word, "word to translate")->required();
+
+    CLI11_PARSE(CLI, argc, argv);
+
     connect_to_server();
 
     return 0;

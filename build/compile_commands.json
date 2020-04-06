@@ -1,13 +1,13 @@
 [
   {
     "directory": "/home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build",
-    "command": "c++ -Imeson-out/server@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread -MD -MQ 'meson-out/server@exe/src_server_main.cpp.o' -MF 'meson-out/server@exe/src_server_main.cpp.o.d' -o 'meson-out/server@exe/src_server_main.cpp.o' -c ../src/server/main.cpp",
+    "command": "c++ -Imeson-out/server@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread -MD -MQ 'meson-out/server@exe/src_server_main.cpp.o' -MF 'meson-out/server@exe/src_server_main.cpp.o.d' -o 'meson-out/server@exe/src_server_main.cpp.o' -c ../src/server/main.cpp",
     "file": "../src/server/main.cpp",
     "output": "meson-out/server@exe/src_server_main.cpp.o"
   },
   {
     "directory": "/home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build",
-    "command": "c++ -Imeson-out/client@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread -MD -MQ 'meson-out/client@exe/src_client_main.cpp.o' -MF 'meson-out/client@exe/src_client_main.cpp.o.d' -o 'meson-out/client@exe/src_client_main.cpp.o' -c ../src/client/main.cpp",
+    "command": "c++ -Imeson-out/client@exe -I. -I.. -I../include -I/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -I/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -I/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -Werror -std=c++2a -g -DASIO_STANDALONE -DASIO_NO_DEPRECATED -pthread -MD -MQ 'meson-out/client@exe/src_client_main.cpp.o' -MF 'meson-out/client@exe/src_client_main.cpp.o.d' -o 'meson-out/client@exe/src_client_main.cpp.o' -c ../src/client/main.cpp",
     "file": "../src/client/main.cpp",
     "output": "meson-out/client@exe/src_client_main.cpp.o"
   }
