@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <thread>
+#include <map>
 
 #include <asio.hpp>
 #include <CLI11.hpp>
@@ -10,45 +11,75 @@
 using namespace std;
 using namespace asio::ip;
 using namespace CLI;
-
-
-void start_server() { //starts the server and creates the dictionary
 /*
+map<char, char> create_dic(string filename){
+    map <char, char> temp;
+
     try{
-        std::ifstream i{input_file};
-        i >> j;
+        ifstream i;
+        i.open(filename);
+        string line;
+        while (getline(i, line)){
+            cout << line << endl;
+        }
+        i.close();
     } catch(...){//compiling text file failed
-        cout << "Invalid text file!" << std::endl;
+        cout << "Cant open text file!" << std::endl;
         return;
     }
+    
+    return temp;
+}
+
 */
+/*
+void create_dic(string filename){
+
+    try{
+        string line;
+        ifstream in('"' + filename + '"');
+        cout << "before while" << endl;
+        while (getline(in, line)){
+            cout << line << endl;
+        }
+        cout << "after while" << endl;
+        in.close();
+    } catch(...){//compiling text file failed
+        cout << "Cant open text file!" << std::endl;
+        return;
+        }
+    }
+*/
+
+void start_server() { //starts the server
+
     try{
         asio::io_context ctx;
         tcp::endpoint ep{tcp::v4(), 2400};
         tcp::acceptor acceptor{ctx, ep};
         acceptor.listen();
         tcp::socket sock{ctx};
-        acceptor.accept(sock);
         cout << "Server started" << endl;
         while (true) {
-
-            }
-    } catch (...) { //lost connection to the client
+            acceptor.accept(sock);
+        }
+    } catch (...) { //lost connection
         cout << "error ..." << endl;
     }
 }
 
-int main(int argc, char* argv[])     {
-    string filename{"de-en.txt"};
-    
+int main(int argc, char* argv[]) {
+
+    string filename{"test.txt"};
+    //map <char, char> dic;
+
     App CLI{"German-English Dictionary"};
     
     CLI.add_option("-f", filename, "file for the dictionary");
 
     CLI11_PARSE(CLI, argc, argv);
 
-    cout << filename << endl;
-
+    create_dic(filename);
     start_server();
 
     return 0;

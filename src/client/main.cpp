@@ -15,12 +15,7 @@ using namespace std;
 
 
 void connect_to_server(){ //Starts the connection to the server
-    try{
-
-    } catch (...) {
-        cout << "Invalid json file!" << endl;
-        return;
-    }
+   
     asio::io_context ctx;
     tcp::resolver resolver{ctx};
     auto results = resolver.resolve("localhost", "2400");
@@ -31,7 +26,7 @@ void connect_to_server(){ //Starts the connection to the server
             asio::connect(sock, results);
         }
         } catch (const std::exception& e) {
-            cout << "lost connection to the elevator!" << endl;
+            cout << "lost connection to the server!" << endl;
         }
     
 }
@@ -40,7 +35,7 @@ void connect_to_server(){ //Starts the connection to the server
 int main(int argc, char* argv[]) 
 {
     string word;
-    
+
     App CLI{"Requester for the dictionary"};
     CLI.add_option("-w", word, "word to translate")->required();
 
