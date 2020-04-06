@@ -1,0 +1,7 @@
+
+option('asio_include_dir', type : 'string', value : '', description : 'the include dir of asio')
+option('CLI11_include_dir', type : 'string', value : '', description : 'the dir containing CLI11.hpp')
+option('doctest_include_dir', type : 'string', value : '', description : 'the dir containing doctest.h')
+option('json_include_dir', type : 'string', value : '', description : 'the dir containing json.hpp')
+option('spdlog_include_dir', type : 'string', value : '', description : 'the include dir of spdlog')
+
