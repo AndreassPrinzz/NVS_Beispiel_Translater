@@ -85,7 +85,7 @@ build dist: phony meson-dist
 # Suffix
 
 build meson-scan-build: CUSTOM_COMMAND PHONY
- COMMAND = /usr/bin/meson --internal scanbuild /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build /usr/bin/meson -DCLI11_include_dir= -Dasio_include_dir= -Dasio_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -Dcli11_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -Dclip_include_dir=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Dclipp_include_dir=/home/andi/Documents/Schule/NVS/clipp/include/ -Dclipp_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Ddoctest_include_dir= -Djson_include_dir= -Dspdlog_include_dir= -Dspdlog_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/
+ COMMAND = /usr/bin/meson --internal scanbuild /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel /home/andi/Documents/Schule/5BHIF_2/NVS_Beispiel/build /usr/bin/meson -DCLI11_include_dir= -Dasio_include_dir= -Dasio_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -Dasioincludedir=/home/andi/Documents/Schule/5BHIF/NVS/asio/include/ -Dcli11_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -Dcli11includedir=/home/andi/Documents/Schule/5BHIF/NVS/CLI11/ -Dclip_include_dir=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Dclipp_include_dir=/home/andi/Documents/Schule/NVS/clipp/include/ -Dclipp_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/clipp/include/ -Ddoctest_include_dir= -Djson_include_dir= -Dspdlog_include_dir= -Dspdlog_include_dir_=/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/ -Dspdlogincludedir=/home/andi/Documents/Schule/5BHIF/NVS/spdlog/include/
  pool = console
 
 build scan-build: phony meson-scan-build

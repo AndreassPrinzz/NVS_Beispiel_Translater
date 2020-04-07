@@ -1,1 +1,5 @@
-hi
+# Version :: 1.8.1 2016-09-06
+# Copyright (c) :: Frank Richter <frank.richter.tu-chemnitz.de>,
+# 1995 - 2016
+# License :: GPL Version 2 or later; GNU General Public License
+# URL :: http://dict.tu-chemnitz.de/

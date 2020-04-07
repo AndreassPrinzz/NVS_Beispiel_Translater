@@ -14,7 +14,7 @@ using namespace CLI;
 using namespace std;
 
 
-void connect_to_server(){ //Starts the connection to the server
+void connect_to_server(string wort){ //Starts the connection to the server
    
     asio::io_context ctx;
     tcp::resolver resolver{ctx};
@@ -22,9 +22,10 @@ void connect_to_server(){ //Starts the connection to the server
     tcp::socket sock{ctx};
 
     try {
-        while (true){
-            asio::connect(sock, results);
-        }
+        tcp::iostream strm (asio::connect(sock, results));
+        strm << wort;
+        strm << flush;
+        strm.close();
         } catch (const std::exception& e) {
             cout << "lost connection to the server!" << endl;
         }
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
 
     CLI11_PARSE(CLI, argc, argv);
 
-    connect_to_server();
+    connect_to_server(word);
 
     return 0;
 }
