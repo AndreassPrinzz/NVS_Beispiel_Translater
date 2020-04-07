@@ -62,7 +62,6 @@ map<string, vector<string>> create_dic(string filename){
             vector<string> parts_de;
             vector<string> parts_en;
             
-            
             parts_de_with_pipe_semicolon = split(temp[0], reg); 
             parts_en_with_pipe_semicolon = split(temp[1], reg);
 
@@ -98,6 +97,7 @@ map<string, vector<string>> create_dic(string filename){
                 cout << parts_en[i] << endl;
             }
 */
+/*
             for (size_t i = 0; i < parts_de.size(); i++){
                 dict.insert(pair(parts_de[i], vector<string> {}));
             }
@@ -110,11 +110,11 @@ map<string, vector<string>> create_dic(string filename){
                 }
                 cout << endl;
             }
+            */
             for (string part : parts_de){
                 auto search = dict.find(part);
                 if (search == dict.end()){
                     dict.insert(pair(part, vector<string> {}));
-                    //dict.emplace(make_pair(part, new vector<string>()));
                 } if (part[0] == '[' || part[0] == '{'){
                     continue;
                 }
@@ -124,39 +124,54 @@ map<string, vector<string>> create_dic(string filename){
                     }
                     dict[part].push_back(parts_en[i]);
                 }
-            }            
+            }       
+            /*
+            for(auto ii=dict.begin(); ii!=dict.end(); ++ii){
+                cout << (*ii).first << ": ";
+                vector <string> inVect = (*ii).second;
+                for (unsigned j=0; j<inVect.size(); j++){
+                    cout << inVect[j] << " ";
+                }
+                cout << endl;
+            }
+            */
+            
         }
         in.close();
     } catch(const exception& e){//compiling text file failed
         cerr << e.what() << endl;
     }
-/*
-    for(auto ii=dict.begin(); ii!=dict.end(); ++ii){
-        cout << (*ii).first << ": ";
-        vector <string> inVect = (*ii).second;
-        for (unsigned j=0; j<inVect.size(); j++){
-            cout << inVect[j] << " ";
-        }
-   cout << endl;
-}
-*/
+    
     return dict;
 }
 
+vector<string> get_word(string word, map<string, vector<string>> &dictionary){
+    for (auto i = dictionary.begin(); i != dictionary.end(); i++){
+        if (word == (*i).first){
+            return (*i).second;
+        }
+    }
+    return vector<string> {};
+}
 
-void start_server() { //starts the server
-    string test;
+void start_server(map<string, vector<string>> &dictionary) { //starts the server
+    string word;
+    vector<string> word_translate;
     try{
+        cout << "Server running" << endl;
         asio::io_context ctx;
-        tcp::endpoint ep{tcp::v4(), 2400};
+        tcp::endpoint ep{tcp::v4(), 4200};
         tcp::acceptor acceptor{ctx, ep};
-
         while (true) {
             tcp::iostream strm;
             acceptor.accept(strm.socket());
             if (strm){
-                getline(strm, test);
-                cout << test << endl;
+                getline(strm, word);
+                word_translate = get_word(word, dictionary);
+                for (size_t i = 0; i < word_translate.size(); i++){
+                    strm << word_translate[i];
+                }
+                strm << word_translate;
             }
             strm.close();
         }
@@ -176,7 +191,7 @@ int main(int argc, char* argv[]) {
     CLI11_PARSE(CLI, argc, argv);
 
     map<string, vector<string>> dictionary {create_dic(filename)};
-    start_server();
+    start_server(dictionary);
 
     return 0;
 }
