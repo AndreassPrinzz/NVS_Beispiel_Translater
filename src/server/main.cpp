@@ -6,6 +6,7 @@
 #include <vector>
 #include <regex>
 #include <utility>
+#include <locale>
 
 
 #include <asio.hpp>
@@ -37,7 +38,7 @@ vector<string> split(const string & s, string rgx_str) {
 
 map<string, vector<string>> create_dic(string filename){
     map<string, vector<string>> dict;
-    string reg = "[}]";
+    string temp_string = "";
     try{
         string line;
         ifstream in(filename);
@@ -47,94 +48,83 @@ map<string, vector<string>> create_dic(string filename){
             }
             
             vector<string> temp = split(line, " :: "); // [0] = deutsch | [1] = englisch
-            /*
-            for (size_t i = 0; i < temp.size(); i++){
-                cout << temp[i] << endl;
-            }
-            */
-
-            vector<string> parts_de_with_pipe_semicolon;
-            vector<string> parts_en_with_pipe_semicolon;
-
+            
             vector<string> parts_de_with_semi;
             vector<string> parts_en_with_semi;
 
             vector<string> parts_de;
             vector<string> parts_en;
             
-            parts_de_with_pipe_semicolon = split(temp[0], reg); 
-            parts_en_with_pipe_semicolon = split(temp[1], reg);
+            parts_de_with_semi = split(temp[0], "\\|"); 
+            
+            parts_en_with_semi = split(temp[1], "\\|"); 
+            
+            for (size_t i{0}; i < parts_de_with_semi.size(); i++) {
+                
+            
+                /*
+                for (size_t i = 0; i < parts_de_with_semi.size(); i++){
+                    cout << parts_de_with_semi[i] << endl;
+                }
 
-            for (size_t i = 0; i < parts_de_with_pipe_semicolon.size(); i++){
-                parts_de_with_semi = split(parts_de_with_pipe_semicolon[i], "\\|"); 
-            }
-            for (size_t i = 0; i < parts_en_with_pipe_semicolon.size(); i++){
-                parts_en_with_semi = split(parts_en_with_pipe_semicolon[i], "\\|"); 
-            }
-            /*
-            for (size_t i = 0; i < parts_de_with_semi.size(); i++){
-                cout << parts_de_with_semi[i] << endl;
-            }
+                for (size_t i = 0; i < parts_en_with_semi.size(); i++){
+                    cout << parts_en_with_semi[i] << endl;
+                }
+                */
 
-            for (size_t i = 0; i < parts_en_with_semi.size(); i++){
-                cout << parts_en_with_semi[i] << endl;
-            }
-            */
-
-            for (size_t i = 0; i < parts_de_with_semi.size(); i++){
                 parts_de = split(parts_de_with_semi[i], ";"); 
-            }
-
-            for (size_t i = 0; i < parts_en_with_semi.size(); i++){
                 parts_en = split(parts_en_with_semi[i], ";"); 
-            }
-            /*
-            for (size_t i = 0; i < parts_de.size(); i++){
-                cout << parts_de[i] << endl;
-            }
-
-            for (size_t i = 0; i < parts_en.size(); i++){
-                cout << parts_en[i] << endl;
-            }
-*/
-/*
-            for (size_t i = 0; i < parts_de.size(); i++){
-                dict.insert(pair(parts_de[i], vector<string> {}));
-            }
-
-            for(auto ii=dict.begin(); ii!=dict.end(); ++ii){
-                cout << (*ii).first << ": ";
-                vector <string> inVect = (*ii).second;
-                for (unsigned j=0; j<inVect.size(); j++){
-                    cout << inVect[j] << " ";
+                /*
+                for (size_t i = 0; i < parts_de.size(); i++){
+                    cout << parts_de[i] << endl;
                 }
-                cout << endl;
-            }
-            */
-            for (string part : parts_de){
-                auto search = dict.find(part);
-                if (search == dict.end()){
-                    dict.insert(pair(part, vector<string> {}));
-                } if (part[0] == '[' || part[0] == '{'){
-                    continue;
-                }
+
                 for (size_t i = 0; i < parts_en.size(); i++){
-                    if (parts_en[i][0] == '[' || parts_en[i][0] == '{'){
-                        continue;
+                    cout << parts_en[i] << endl;
+                }
+                */
+
+                for (string part : parts_de){
+                    for (size_t i = 0; i < part.length(); i++){
+                        if (part[i] != '[' && part[i] != '{' && part[i] != '('){
+                            if ((i + 1) < part.length())
+                                temp_string += part[i];
+                        } else {
+                            if (i < part.length()){
+                                i++;
+                            }
+                            while ((i) < part.length() && (part[i] != ']' || part[i] != '}' || part[i] != ')')){
+                                i++;
+                            }
+                        }
                     }
-                    dict[part].push_back(parts_en[i]);
-                }
-            }       
-            /*
-            for(auto ii=dict.begin(); ii!=dict.end(); ++ii){
-                cout << (*ii).first << ": ";
-                vector <string> inVect = (*ii).second;
-                for (unsigned j=0; j<inVect.size(); j++){
-                    cout << inVect[j] << " ";
-                }
-                cout << endl;
+                    if (temp_string[temp_string.length() - 1] == ' '){
+                        temp_string.pop_back();
+                    }
+
+                    if (temp_string[0] ==  ' '){
+                        temp_string.erase(temp_string.begin());
+                    }
+
+
+                    locale loc;
+                    string temp_lower;
+                    for (auto c : temp_string){
+                        temp_lower += tolower(c, loc);
+                    }
+
+                    part = temp_lower;
+                    temp_string = "";
+                    auto search = dict.find(part);
+                    if (search == dict.end()){
+                        dict.insert(pair(part, vector<string> {}));
+                    }
+                    for (size_t i = 0; i < parts_en.size(); i++){
+                        dict[part].push_back(parts_en[i]);
+                    }
+                } 
             }
-            */
+            
             
         }
         in.close();
@@ -146,12 +136,11 @@ map<string, vector<string>> create_dic(string filename){
 }
 
 vector<string> get_word(string word, map<string, vector<string>> &dictionary){
-    for (auto i = dictionary.begin(); i != dictionary.end(); i++){
-        if (word == (*i).first){
-            return (*i).second;
-        }
+    try {
+        return dictionary.at(word);
+    } catch (...) {
+        return vector <string> {};
     }
-    return vector<string> {};
 }
 
 void start_server(map<string, vector<string>> &dictionary) { //starts the server
@@ -168,10 +157,13 @@ void start_server(map<string, vector<string>> &dictionary) { //starts the server
             if (strm){
                 getline(strm, word);
                 word_translate = get_word(word, dictionary);
-                for (size_t i = 0; i < word_translate.size(); i++){
-                    strm << word_translate[i];
+                if (word_translate.size() == 0){
+                    strm << "no translations found" << endl;
+                } else {
+                    for (size_t i = 0; i < word_translate.size(); i++){
+                        strm << word_translate[i] << endl;;
+                    }
                 }
-                strm << word_translate;
             }
             strm.close();
         }
@@ -191,6 +183,16 @@ int main(int argc, char* argv[]) {
     CLI11_PARSE(CLI, argc, argv);
 
     map<string, vector<string>> dictionary {create_dic(filename)};
+    /* 
+    for(auto ii=dictionary.begin(); ii!=dictionary.end(); ++ii){ //output of the dictionary
+        cout << (*ii).first << ": ";
+        vector <string> inVect = (*ii).second;
+        for (unsigned j=0; j<inVect.size(); j++){
+            cout << inVect[j] << " ";
+        }
+        cout << endl;
+    }  
+    */
     start_server(dictionary);
 
     return 0;

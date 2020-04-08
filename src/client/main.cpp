@@ -6,6 +6,7 @@
 #include <thread>
 #include <iostream>
 #include <vector>
+#include <locale>
 
 
 
@@ -16,37 +17,49 @@ using namespace std;
 
 
 void connect_to_server(string wort){ //Starts the connection to the server
-   
-    vector<string> translated_words;
-    string word_temp;
+
+    string word_translate;
+    /*
     asio::io_context ctx;
     tcp::resolver resolver{ctx};
     auto results = resolver.resolve("localhost", "4200");
     tcp::socket sock{ctx};
+    */
 
     try {
-        tcp::iostream strm (asio::connect(sock, results));
-        strm << wort;
-        strm >> word_temp;
-        translated_words.push_back(word_temp);
-        for (size_t i = 0; i < translated_words.size(); i++){
-            cout << translated_words[i] + "; " << endl; 
+        tcp::iostream strm {"localhost", "4200"};
+        strm << wort << endl;
+        if (strm){
+            cout << "Translations of '" + wort + "': " + "\n" << endl;
+        while (getline(strm, word_translate)){
+            cout << word_translate << endl;
+        }
+        cout << endl;
+        } else {
+            cout << "no stream" << endl;
         }
         strm.close();
         } catch (const std::exception& e) {
-            cout << e.what() << endl;
+            cout << "lost connection to server" << endl;
         }  
 }
 
 
-int main(int argc, char* argv[]) 
-{
+int main(int argc, char* argv[]){
     string word;
 
     App CLI{"Requester for the dictionary"};
     CLI.add_option("-w", word, "word to translate")->required();
 
     CLI11_PARSE(CLI, argc, argv);
+
+    locale loc;
+    string temp_lower;
+    for (auto c : word){
+        temp_lower += tolower(c, loc);
+    }
+
+    word = temp_lower;
 
     connect_to_server(word);
 
