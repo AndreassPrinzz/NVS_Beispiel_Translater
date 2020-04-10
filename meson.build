@@ -1,15 +1,15 @@
-project('Translater', 'cpp',
+project('Translator', 'cpp',
         license : ['Boost'],
         version : '0.1',
-        default_options : ['cpp_std=c++17'])
+        default_options : ['cpp_std=c++17', '-wError=pendantic'])
 
-add_global_arguments('-I' + get_option('asioincludedir'), language : 'cpp')
+add_global_arguments('-I' + get_option('asio_include_dir'), language : 'cpp')
 add_global_arguments('-DASIO_STANDALONE', language : 'cpp')
 add_global_arguments('-DASIO_NO_DEPRECATED', language : 'cpp')
 
-add_global_arguments('-I' + get_option('cli11includedir'), language : 'cpp')
+add_global_arguments('-I' + get_option('cli11_include_dir'), language : 'cpp')
 
-add_global_arguments('-I' + get_option('spdlogincludedir'), language : 'cpp')
+add_global_arguments('-I' + get_option('spdlog_include_dir'), language : 'cpp')
 
 inc_dir = include_directories(['include'])
 

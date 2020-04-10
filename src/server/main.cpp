@@ -8,10 +8,11 @@
 #include <utility>
 #include <locale>
 
-
-#include <asio.hpp>
-#include <CLI11.hpp>
+//#include <asio.hpp>
+//#include <CLI11.hpp>
 //#include <spdlog/spdlog.h>
+
+#include <src/includes.cpp>
 
 using namespace std;
 using namespace asio::ip;
@@ -42,6 +43,8 @@ map<string, vector<string>> create_dic(string filename){
     try{
         string line;
         ifstream in(filename);
+        if (in) {
+            spdlog::info("creating dictionary ...");
         while (getline(in, line)){
             if (line[0] == '#'){
                 continue;
@@ -59,79 +62,59 @@ map<string, vector<string>> create_dic(string filename){
             
             parts_en_with_semi = split(temp[1], "\\|"); 
             
-            for (size_t i{0}; i < parts_de_with_semi.size(); i++) {
+            for (size_t i{0}; i < parts_de_with_semi.size(); i++) { // split ;
                 
-            
-                /*
-                for (size_t i = 0; i < parts_de_with_semi.size(); i++){
-                    cout << parts_de_with_semi[i] << endl;
-                }
-
-                for (size_t i = 0; i < parts_en_with_semi.size(); i++){
-                    cout << parts_en_with_semi[i] << endl;
-                }
-                */
-
                 parts_de = split(parts_de_with_semi[i], ";"); 
                 parts_en = split(parts_en_with_semi[i], ";"); 
-                /*
-                for (size_t i = 0; i < parts_de.size(); i++){
-                    cout << parts_de[i] << endl;
-                }
-
-                for (size_t i = 0; i < parts_en.size(); i++){
-                    cout << parts_en[i] << endl;
-                }
-                */
-
+               
                 for (string part : parts_de){
                     for (size_t i = 0; i < part.length(); i++){
-                        if (part[i] != '[' && part[i] != '{' && part[i] != '('){
+                        if (part[i] != '[' && part[i] != '{' && part[i] != '('){//check if bracket
                             if ((i + 1) < part.length())
                                 temp_string += part[i];
                         } else {
                             if (i < part.length()){
                                 i++;
                             }
-                            while ((i) < part.length() && (part[i] != ']' || part[i] != '}' || part[i] != ')')){
+                            while ((i) < part.length() && (part[i] != ']' || part[i] != '}' || part[i] != ')')){//go to end of bracket
                                 i++;
                             }
                         }
                     }
-                    if (temp_string[temp_string.length() - 1] == ' '){
-                        temp_string.pop_back();
-                    }
 
-                    if (temp_string[0] ==  ' '){
-                        temp_string.erase(temp_string.begin());
-                    }
-
+                    string::iterator end_pos = remove(temp_string.begin(), temp_string.end(), ' ');//remove all whitespaces
+                    temp_string.erase(end_pos, temp_string.end());
 
                     locale loc;
                     string temp_lower;
                     for (auto c : temp_string){
                         temp_lower += tolower(c, loc);
                     }
-
                     part = temp_lower;
+                    spdlog::debug("Deutsches Wort: " + part);
                     temp_string = "";
                     auto search = dict.find(part);
                     if (search == dict.end()){
                         dict.insert(pair(part, vector<string> {}));
                     }
                     for (size_t i = 0; i < parts_en.size(); i++){
-                        dict[part].push_back(parts_en[i]);
+                        spdlog::debug("englische Wörter: " + parts_en[i]);
+                        dict[part].push_back(parts_en[i]);//add english words the dict
                     }
                 } 
             }
             
             
         }
+        spdlog::info("dictionary created");
+        } else { //if file not found quit the program
+            spdlog::error("file not found", 1);
+            exit(-1);
+        }
         in.close();
-    } catch(const exception& e){//compiling text file failed
-        cerr << e.what() << endl;
-    }
-    
+    } catch(const exception& e){//reading the text file failed
+        spdlog::error("there occured an error while reading the text file", 1);
+    } 
     return dict;
 }
 
@@ -147,15 +130,17 @@ void start_server(map<string, vector<string>> &dictionary) { //starts the server
     string word;
     vector<string> word_translate;
     try{
-        cout << "Server running" << endl;
         asio::io_context ctx;
         tcp::endpoint ep{tcp::v4(), 4200};
         tcp::acceptor acceptor{ctx, ep};
+        spdlog::info("Server running");
         while (true) {
             tcp::iostream strm;
             acceptor.accept(strm.socket());
             if (strm){
                 getline(strm, word);
+                string::iterator end_pos = remove(word.begin(), word.end(), ' ');
+                word.erase(end_pos, word.end());
                 word_translate = get_word(word, dictionary);
                 if (word_translate.size() == 0){
                     strm << "no translations found" << endl;
@@ -167,21 +152,26 @@ void start_server(map<string, vector<string>> &dictionary) { //starts the server
             }
             strm.close();
         }
-    } catch (...) { //lost connection
-        cout << "error ..." << endl;
+    } catch (const std::exception& e) { //lost connection
+        spdlog::error('while starting the server there occured an error: ' + e.what());
     }
 }
 
 int main(int argc, char* argv[]) {
 
     string filename{"../de-en.txt"};
+    bool debug;
 
     App CLI{"German-English Dictionary"};
     
     CLI.add_option("-f", filename, "file for the dictionary");
+    CLI.add_option("-d", debug, "set debug level true/false");
 
     CLI11_PARSE(CLI, argc, argv);
 
+    if (debug){
+        spdlog::set_level(spdlog::level::debug);
+    }
     map<string, vector<string>> dictionary {create_dic(filename)};
     /* 
     for(auto ii=dictionary.begin(); ii!=dictionary.end(); ++ii){ //output of the dictionary

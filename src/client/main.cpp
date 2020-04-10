@@ -1,14 +1,12 @@
-#include <asio.hpp>
-#include <CLI11.hpp>
 #include <fstream>
 #include <string>
-//#include <spdlog/spdlog.h>
 #include <thread>
 #include <iostream>
 #include <vector>
 #include <locale>
 
 
+#include <src/includes.cpp>
 
 using namespace asio::ip;
 using namespace CLI;
@@ -17,7 +15,6 @@ using namespace std;
 
 
 void connect_to_server(string wort){ //Starts the connection to the server
-
     string word_translate;
     /*
     asio::io_context ctx;
@@ -36,11 +33,11 @@ void connect_to_server(string wort){ //Starts the connection to the server
         }
         cout << endl;
         } else {
-            cout << "no stream" << endl;
+            spdlog::error("lost connection to server", 1);
         }
         strm.close();
         } catch (const std::exception& e) {
-            cout << "lost connection to server" << endl;
+            spdlog::error("could not connect to server", 1);
         }  
 }
 

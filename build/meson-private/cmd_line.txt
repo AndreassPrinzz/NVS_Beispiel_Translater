@@ -1,6 +1,4 @@
 [options]
-buildtype = debug
-layout = flat
 backend = ninja
 
 [properties]
