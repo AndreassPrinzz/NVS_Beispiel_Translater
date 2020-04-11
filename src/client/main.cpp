@@ -16,22 +16,14 @@ using namespace std;
 
 void connect_to_server(string wort){ //Starts the connection to the server
     string word_translate;
-    /*
-    asio::io_context ctx;
-    tcp::resolver resolver{ctx};
-    auto results = resolver.resolve("localhost", "4200");
-    tcp::socket sock{ctx};
-    */
 
     try {
         tcp::iostream strm {"localhost", "4200"};
-        strm << wort << endl;
+        strm <<"REQ " +  wort << endl;
         if (strm){
-            cout << "Translations of '" + wort + "': " + "\n" << endl;
-        while (getline(strm, word_translate)){
-            cout << word_translate << endl;
-        }
-        cout << endl;
+            while (getline(strm, word_translate)){
+                cout << word_translate << endl;
+            }
         } else {
             spdlog::error("lost connection to server", 1);
         }
@@ -46,9 +38,14 @@ int main(int argc, char* argv[]){
     string word;
 
     App CLI{"Requester for the dictionary"};
-    CLI.add_option("-w", word, "word to translate")->required();
-
+    CLI.allow_extras();
     CLI11_PARSE(CLI, argc, argv);
+
+    if (argc != 2){
+        spdlog::error("must be one argument", 1);
+        return 1;
+    }
+    word = argv[1];
 
     locale loc;
     string temp_lower;

@@ -8,10 +8,6 @@
 #include <utility>
 #include <locale>
 
-//#include <asio.hpp>
-//#include <CLI11.hpp>
-//#include <spdlog/spdlog.h>
-
 #include <src/includes.cpp>
 
 using namespace std;
@@ -126,6 +122,11 @@ vector<string> get_word(string word, map<string, vector<string>> &dictionary){
     }
 }
 
+string remove_req(string word){
+    word.erase(0, 3);
+    return word;
+}
+
 void start_server(map<string, vector<string>> &dictionary) { //starts the server
     string word;
     vector<string> word_translate;
@@ -133,34 +134,43 @@ void start_server(map<string, vector<string>> &dictionary) { //starts the server
         asio::io_context ctx;
         tcp::endpoint ep{tcp::v4(), 4200};
         tcp::acceptor acceptor{ctx, ep};
-        spdlog::info("Server running");
-        while (true) {
-            tcp::iostream strm;
-            acceptor.accept(strm.socket());
-            if (strm){
-                getline(strm, word);
-                string::iterator end_pos = remove(word.begin(), word.end(), ' ');
-                word.erase(end_pos, word.end());
-                word_translate = get_word(word, dictionary);
-                if (word_translate.size() == 0){
-                    strm << "no translations found" << endl;
-                } else {
-                    for (size_t i = 0; i < word_translate.size(); i++){
-                        strm << word_translate[i] << endl;;
+        error_code ec;
+        acceptor.bind(ep, ec);
+        if (!ec){
+            spdlog::error("could not start server");
+        } else {
+            spdlog::info("Server running");
+            while (true) {
+                tcp::iostream strm;
+                acceptor.accept(strm.socket());
+                if (strm){
+                    if (getline(strm, word)){
+                        string::iterator end_pos = remove(word.begin(), word.end(), ' ');
+                        word.erase(end_pos, word.end());
+                        word = remove_req(word);
+                        word_translate = get_word(word, dictionary);
+                        if (word_translate.size() == 0){//no translation found
+                            strm << "NAK" << endl;
+                        } else {
+                            for (size_t i = 0; i < word_translate.size(); i++){
+                                strm <<"ACK: " + word_translate[i] << endl;;
+                                }
+                            }
+                        }
                     }
-                }
+                strm.close();
             }
-            strm.close();
-        }
-    } catch (const std::exception& e) { //lost connection
-        spdlog::error('while starting the server there occured an error: ' + e.what());
+    }
+    } catch (std::exception& e) { //lost connection
+        spdlog::error("while starting the server there occured an error.");
+        //spdlog::error(e.what());
     }
 }
 
 int main(int argc, char* argv[]) {
 
     string filename{"../de-en.txt"};
-    bool debug;
+    bool debug{false};
 
     App CLI{"German-English Dictionary"};
     
